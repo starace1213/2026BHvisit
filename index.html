@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f6fa">
+<title>가계부 | 2026년 10월</title>
+<style>
+:root{--bg:#f5f6fa;--card:#fff;--ink:#202536;--muted:#8991a2;--line:#e9ebf1;--blue:#4867e8;--red:#e15c68;--green:#15966c;--blue-soft:#eef1ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif}
+.wrap{width:min(100%,1020px);margin:auto;padding:22px 20px 44px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+h1{font-size:23px;letter-spacing:-.7px;margin:0;font-weight:850}
+.caption{font-size:12px;color:var(--muted);margin-top:5px}
+.public-tag{font-size:11px;color:#6c7485;background:#eceef4;border-radius:20px;padding:6px 9px}
+.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.metric{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:15px 16px;min-width:0}
+.metric-label{font-size:12px;color:var(--muted);margin-bottom:8px}
+.metric-value{font-size:clamp(17px,2.8vw,24px);font-weight:850;letter-spacing:-.6px;white-space:nowrap}
+.income .metric-value{color:var(--green)}.expense .metric-value{color:var(--red)}
+.content{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,.85fr);gap:14px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;overflow:hidden}
+.cal-head{display:flex;justify-content:space-between;align-items:center;padding:17px 17px 12px}
+.month{font-size:19px;font-weight:850;letter-spacing:-.5px}
+.nav{display:flex;gap:6px}
+.nav button{height:34px;width:36px;border:1px solid var(--line);background:#fff;border-radius:10px;font-size:19px;color:var(--ink);cursor:pointer}
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));padding:0 10px}
+.week div{text-align:center;color:var(--muted);font-size:11px;font-weight:750;padding:7px 0}
+.week div:first-child{color:var(--red)}.week div:last-child{color:var(--blue)}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;padding:0 10px 12px}
+.day{min-width:0;min-height:83px;border:1px solid transparent;border-radius:10px;background:#fff;text-align:left;padding:6px 5px;cursor:pointer;color:var(--ink)}
+.day:hover{background:#f8f9ff;border-color:#e3e7ff}
+.day.selected{background:var(--blue-soft);border-color:#b9c5ff}
+.day.outside{opacity:.28}
+.day .date{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;font-size:12px;font-weight:800;border-radius:50%}
+.day.today .date{background:var(--blue);color:white}
+.day .amt{display:block;font-size:9px;line-height:1.4;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}
+.day .amt.in{color:var(--green)}.day .amt.out{color:var(--red)}
+.detail{padding:17px}
+.detail-head{padding-bottom:13px;border-bottom:1px solid var(--line)}
+.detail-date{font-size:18px;font-weight:850}
+.detail-sum{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.6}
+.group{margin-top:16px}
+.group-head{display:flex;justify-content:space-between;font-size:12px;font-weight:850;margin-bottom:5px}
+.group-head .total{font-variant-numeric:tabular-nums}
+.item{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #f0f1f5;font-size:12px}
+.item:last-child{border-bottom:0}
+.item-name{min-width:0;overflow-wrap:anywhere;line-height:1.45}
+.item-value{white-space:nowrap;font-weight:800;font-variant-numeric:tabular-nums}
+.item.exp .item-value{color:var(--red)}.item.inc .item-value{color:var(--green)}
+.empty{text-align:center;color:var(--muted);font-size:12px;padding:28px 8px;line-height:1.7}
+footer{font-size:11px;color:var(--muted);text-align:center;margin-top:16px}
+@media(max-width:760px){
+ .wrap{padding:17px 11px 30px}
+ header{margin-bottom:14px}
+ h1{font-size:21px}
+ .summary{gap:6px;margin-bottom:10px}
+ .metric{padding:12px 9px;border-radius:12px}
+ .metric-label{font-size:10px;margin-bottom:6px}
+ .metric-value{font-size:clamp(14px,4vw,19px)}
+ .content{grid-template-columns:1fr;gap:10px}
+ .cal-head{padding:14px 13px 9px}
+ .month{font-size:18px}
+ .week{padding:0 6px}
+ .days{padding:0 6px 9px;gap:2px}
+ .day{min-height:68px;padding:4px 2px;border-radius:8px}
+ .day .date{width:22px;height:22px;font-size:11px}
+ .day .amt{font-size:8px;margin-top:3px;letter-spacing:-.2px}
+ .detail{padding:14px}
+ .detail-date{font-size:17px}
+}
+@media(max-width:360px){
+ .wrap{padding-left:8px;padding-right:8px}
+ .day{min-height:62px}
+ .day .amt{font-size:7px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <div><h1>가계부</h1><div class="caption">2026년 10월 거래내역</div></div>
+ <span class="public-tag">공유용</span>
+</header>
+<section class="summary">
+ <div class="metric income"><div class="metric-label">총 수입</div><div class="metric-value" id="incomeTotal">-</div></div>
+ <div class="metric expense"><div class="metric-label">총 지출</div><div class="metric-value" id="expenseTotal">-</div></div>
+ <div class="metric"><div class="metric-label">잔액</div><div class="metric-value" id="balanceTotal">-</div></div>
+</section>
+<main class="content">
+ <section class="card">
+  <div class="cal-head"><div class="month" id="monthTitle"></div><div class="nav"><button id="prev" aria-label="이전 달">‹</button><button id="next" aria-label="다음 달">›</button></div></div>
+  <div class="week"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
+  <div class="days" id="days"></div>
+ </section>
+ <section class="card detail">
+  <div class="detail-head"><div class="detail-date" id="detailDate"></div><div class="detail-sum" id="detailSummary"></div></div>
+  <div id="detailRows"></div>
+ </section>
+</main>
+<footer>표시된 내역은 공유용 가계부 데이터입니다.</footer>
+</div>
+<script>
+const records=[{"date":"2026-10-16","type":"expense","name":"코레일(삼촌)","amount":96700},{"date":"2026-10-18","type":"income","name":"엄마(삼촌)","amount":1000000},{"date":"2026-10-18","type":"income","name":"엄마(삼촌)","amount":1000000},{"date":"2026-10-20","type":"income","name":"엄마(삼촌)","amount":300000},{"date":"2026-10-21","type":"expense","name":"택시(홍대-숙소)","amount":6800},{"date":"2026-10-21","type":"expense","name":"택시(홍대-숙소)","amount":7500},{"date":"2026-10-21","type":"expense","name":"하오하오(점심)","amount":57000},{"date":"2026-10-21","type":"expense","name":"유나스크림42호","amount":8600},{"date":"2026-10-21","type":"expense","name":"택시","amount":9900},{"date":"2026-10-21","type":"expense","name":"경복궁","amount":6000},{"date":"2026-10-21","type":"expense","name":"택시","amount":12100},{"date":"2026-10-21","type":"expense","name":"시나본","amount":13200},{"date":"2026-10-21","type":"expense","name":"이정주(회오리감자)","amount":5000},{"date":"2026-10-21","type":"expense","name":"택시(명동-숙소)","amount":21400},{"date":"2026-10-22","type":"expense","name":"롯데백화점","amount":10500},{"date":"2026-10-22","type":"expense","name":"롯데월드티켓","amount":45500},{"date":"2026-10-22","type":"expense","name":"롯데월드","amount":11300},{"date":"2026-10-22","type":"expense","name":"롯데월드","amount":4800},{"date":"2026-10-22","type":"expense","name":"롯데월드","amount":27500},{"date":"2026-10-22","type":"expense","name":"롯데월드","amount":5500},{"date":"2026-10-22","type":"expense","name":"롯데월드","amount":10000},{"date":"2026-10-22","type":"expense","name":"롯데월드","amount":6550},{"date":"2026-10-22","type":"expense","name":"롯데월드","amount":4800},{"date":"2026-10-22","type":"expense","name":"롯데월드","amount":5500},{"date":"2026-10-22","type":"expense","name":"롯데백화점","amount":8000},{"date":"2026-10-22","type":"expense","name":"반하는 보쌈&밥상","amount":69500},{"date":"2026-10-22","type":"expense","name":"베스킨라빈스","amount":30400},{"date":"2026-10-22","type":"expense","name":"뚜레쥬르 마포구청역","amount":12500},{"date":"2026-10-22","type":"expense","name":"세븐일레븐 망원본점","amount":30900},{"date":"2026-10-23","type":"expense","name":"메가커피","amount":18100},{"date":"2026-10-23","type":"expense","name":"메가커피","amount":7000},{"date":"2026-10-23","type":"expense","name":"신촌꽃게장","amount":7000},{"date":"2026-10-23","type":"expense","name":"광장시장 고구마","amount":6000},{"date":"2026-10-23","type":"expense","name":"CU","amount":2200},{"date":"2026-10-23","type":"expense","name":"안관회","amount":8000},{"date":"2026-10-23","type":"expense","name":"CU","amount":22000},{"date":"2026-10-23","type":"expense","name":"CU","amount":4500},{"date":"2026-10-23","type":"expense","name":"CU","amount":2400},{"date":"2026-10-23","type":"expense","name":"CU","amount":14500},{"date":"2026-10-23","type":"expense","name":"스타벅스","amount":5800},{"date":"2026-10-23","type":"expense","name":"CU","amount":6000},{"date":"2026-10-23","type":"expense","name":"따릉이","amount":1000},{"date":"2026-10-23","type":"expense","name":"주)시너지션","amount":11600},{"date":"2026-10-23","type":"expense","name":"베스킨라빈스","amount":28910},{"date":"2026-10-23","type":"expense","name":"GS25","amount":2000},{"date":"2026-10-23","type":"expense","name":"현대백화점","amount":28800},{"date":"2026-10-23","type":"expense","name":"세븐일레븐 망원본점","amount":6100},{"date":"2026-10-24","type":"expense","name":"카카오택시","amount":30600},{"date":"2026-10-24","type":"income","name":"하나캐쉬백","amount":99},{"date":"2026-10-24","type":"expense","name":"안경매니저","amount":241000},{"date":"2026-10-24","type":"expense","name":"가오예시티약국","amount":44500},{"date":"2026-10-24","type":"expense","name":"롯데리아 대전가오점","amount":36800},{"date":"2026-10-24","type":"expense","name":"정감미","amount":31100},{"date":"2026-10-24","type":"expense","name":"정감미","amount":9000},{"date":"2026-10-24","type":"expense","name":"이마트 대전터미널점","amount":41300},{"date":"2026-10-24","type":"expense","name":"이마트 대전터미널점","amount":248400},{"date":"2026-10-24","type":"expense","name":"이마트 대전터미널점","amount":12935},{"date":"2026-10-24","type":"expense","name":"이마트 대전터미널점","amount":14400},{"date":"2026-10-24","type":"expense","name":"이마트 대전터미널점","amount":19900},{"date":"2026-10-24","type":"expense","name":"이마트 대전터미널점","amount":79800},{"date":"2026-10-24","type":"expense","name":"세븐일레븐 대전대흥중앙점","amount":17000},{"date":"2026-10-25","type":"expense","name":"공항버스예매","amount":120400},{"date":"2026-10-25","type":"income","name":"엄마(삼촌)","amount":1000000},{"date":"2026-10-25","type":"expense","name":"버스예매","amount":60200},{"date":"2026-10-25","type":"income","name":"우리캐시백","amount":65},{"date":"2026-10-25","type":"expense","name":"패션아일랜드","amount":276000},{"date":"2026-10-25","type":"expense","name":"올리브영","amount":220100},{"date":"2026-10-25","type":"expense","name":"패션아일랜드","amount":48900},{"date":"2026-10-25","type":"expense","name":"국립중앙과학관","amount":4000},{"date":"2026-10-25","type":"expense","name":"다이소","amount":13000},{"date":"2026-10-25","type":"expense","name":"세븐일레븐 대전대흥중앙점","amount":15700},{"date":"2026-10-26","type":"expense","name":"GS25","amount":15500},{"date":"2026-10-26","type":"income","name":"국민->우리","amount":100000},{"date":"2026-10-26","type":"expense","name":"올리브영","amount":200700},{"date":"2026-10-26","type":"expense","name":"코레일","amount":21500},{"date":"2026-10-26","type":"expense","name":"세븐일레븐대전대흥중앙점","amount":2500},{"date":"2026-10-26","type":"expense","name":"국립중앙과학관 예매","amount":2500},{"date":"2026-10-26","type":"expense","name":"주식회사스몹컴퍼니","amount":93000},{"date":"2026-10-27","type":"expense","name":"한식소담길 인천공항 T2점","amount":25900},{"date":"2026-10-27","type":"income","name":"연재 현금","amount":12000},{"date":"2026-10-27","type":"expense","name":"CU","amount":16800},{"date":"2026-10-27","type":"income","name":"은재 현금","amount":9000},{"date":"2026-10-27","type":"expense","name":"고양휴게소(문산)","amount":6000},{"date":"2026-10-27","type":"income","name":"원재 현금","amount":10000},{"date":"2026-10-27","type":"expense","name":"카카오택시","amount":5700},{"date":"2026-10-27","type":"expense","name":"투썸플레이스 은평한옥마을점","amount":10400},{"date":"2026-10-27","type":"expense","name":"카카오택시","amount":6100},{"date":"2026-10-27","type":"expense","name":"성심당","amount":26800},{"date":"2026-10-27","type":"expense","name":"성심당","amount":15300},{"date":"2026-10-27","type":"expense","name":"카카오택시","amount":5000},{"date":"2026-10-27","type":"expense","name":"메가커피","amount":14800},{"date":"2026-10-27","type":"expense","name":"스타필드","amount":39900},{"date":"2026-10-27","type":"expense","name":"올리브영 동대문역사문화공원역점","amount":29800},{"date":"2026-10-28","type":"expense","name":"카카오택시","amount":14600},{"date":"2026-10-28","type":"expense","name":"ABC마트","amount":47000},{"date":"2026-10-28","type":"expense","name":"안용태","amount":12000},{"date":"2026-10-29","type":"expense","name":"카카오택시","amount":7800},{"date":"2026-10-29","type":"expense","name":"(재) 서울디자인재단 DDP","amount":6000},{"date":"2026-10-29","type":"expense","name":"(재) 서울디자인재단 DDP","amount":13000},{"date":"2026-10-29","type":"expense","name":"스토리웨이","amount":6500},{"date":"2026-10-29","type":"expense","name":"한식소담길 인천공항 T2점","amount":28000},{"date":"2026-10-29","type":"expense","name":"CU","amount":2200},{"date":"2026-10-29","type":"expense","name":"한식소담길 인천공항 T2점","amount":14900},{"date":"2026-10-29","type":"expense","name":"한식소담길 인천공항 T2점","amount":43000},{"date":"2026-10-29","type":"expense","name":"올리브영 네트웍스(주)인천공항제2여객","amount":65700},{"date":"2026-10-29","type":"expense","name":"고속시외_현장","amount":18000}];
+const $=id=>document.getElementById(id);
+let year=2026,month=9,selected='2026-10-16';
+const fmt=n=>'₩'+Math.round(n).toLocaleString('ko-KR');
+const pad=n=>String(n).padStart(2,'0');
+const key=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const monthRows=()=>records.filter(r=>r.date.startsWith(`${year}-${pad(month+1)}`));
+function render(){
+ $('monthTitle').textContent=`${year}년 ${month+1}월`;
+ const mr=monthRows();
+ const inc=mr.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0);
+ const exp=mr.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);
+ $('incomeTotal').textContent=fmt(inc);$('expenseTotal').textContent=fmt(exp);$('balanceTotal').textContent=fmt(inc-exp);
+ const first=new Date(year,month,1),start=new Date(year,month,1-first.getDay());
+ const count=Math.ceil((first.getDay()+new Date(year,month+1,0).getDate())/7)*7;
+ let out='';
+ for(let i=0;i<count;i++){
+  const d=new Date(start);d.setDate(start.getDate()+i);const k=key(d);
+  const rs=records.filter(r=>r.date===k);
+  const di=rs.filter(r=>r.type==='income').reduce((s,x)=>s+x.amount,0);
+  const de=rs.filter(r=>r.type==='expense').reduce((s,x)=>s+x.amount,0);
+  out+=`<button class="day ${d.getMonth()!==month?'outside':''} ${k===selected?'selected':''}" data-key="${k}">
+   <span class="date">${d.getDate()}</span>
+   ${di?`<span class="amt in">+${compact(di)}</span>`:''}
+   ${de?`<span class="amt out">−${compact(de)}</span>`:''}
+  </button>`;
+ }
+ $('days').innerHTML=out;
+ $('days').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{selected=b.dataset.key;const d=new Date(selected+'T00:00:00');year=d.getFullYear();month=d.getMonth();render();}));
+ renderDetail();
+}
+function compact(n){return n>=1000000?(n/1000000).toFixed(1)+'백만':n>=10000?(n/10000).toFixed(n%10000===0?0:1)+'만':n.toLocaleString('ko-KR');}
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderDetail(){
+ const d=new Date(selected+'T00:00:00'),rs=records.filter(r=>r.date===selected);
+ const di=rs.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0),de=rs.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);
+ $('detailDate').textContent=`${d.getMonth()+1}월 ${d.getDate()}일 (${['일','월','화','수','목','금','토'][d.getDay()]})`;
+ $('detailSummary').textContent=`수입 ${fmt(di)} · 지출 ${fmt(de)} · 잔액 ${fmt(di-de)}`;
+ const section=(type,label,total)=>{const list=rs.filter(x=>x.type===type);return list.length?`<div class="group"><div class="group-head"><span>${label}</span><span class="total">${fmt(total)}</span></div>${list.map(x=>`<div class="item ${type==='income'?'inc':'exp'}"><span class="item-name">${safe(x.name)}</span><span class="item-value">${type==='income'?'+':'−'}${fmt(x.amount)}</span></div>`).join('')}</div>`:'';};
+ $('detailRows').innerHTML=rs.length?section('expense','지출',de)+section('income','수입',di):'<div class="empty">이 날짜에는 거래내역이 없습니다.</div>';
+}
+function shift(n){month+=n;if(month<0){month=11;year--;}if(month>11){month=0;year++;}selected=`${year}-${pad(month+1)}-01`;render();}
+$('prev').onclick=()=>shift(-1);$('next').onclick=()=>shift(1);
+render();
+</script>
+</body>
+</html>
